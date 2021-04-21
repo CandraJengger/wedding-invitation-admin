@@ -1,41 +1,36 @@
-import {
-    triggerFocus
-} from 'antd/lib/input/Input';
-import prisma from '../../../lib/prisma'
+import prisma from '../../../lib/prisma';
+import authenticate from '../middleware';
 
-export default async function (req, res) {
-
+const handler = async (req, res) => {
     if (req.method === 'GET') {
+        // res.json({data : req.username});
         try {
             const invitations = await prisma.invitation.findMany();
             if (invitations.length > 0) {
-                res.status(200);
-                res.json({
+               return res.status(200)
+               .json({
                     success: true,
                     data: {
                         invitations
                     }
-                });
+                }).end();
             } else {
-                res.status(404);
-                res.json({
+                return res.status(404).json({
                     success: false,
                     error: {
                         message: "Not Found!"
                     }
-                });
+                }).end();
             }
 
-            res.end();
+            // res.end();
         } catch (e) {
-            res.status(500);
-            res.json({
+            return res.status(500).json({
                 success: false,
                 error: {
                     message: e
                 }
-            });
-            res.end();
+            }).end();
         }
     } else if (req.method === "POST") {
         try {
@@ -74,3 +69,5 @@ export default async function (req, res) {
     }
 
 }
+
+export default authenticate(handler);

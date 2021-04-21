@@ -1,8 +1,8 @@
 import prisma from '../../lib/prisma';
-import {
-    compare,
-    hash
-} from 'bcrypt';
+import bcrypt from 'bcrypt';
+import {sign} from './auth';
+
+var salt = bcrypt.genSaltSync(10);
 
 export default async function (req, res) {
 
@@ -18,35 +18,30 @@ export default async function (req, res) {
             }
         });
 
+        bcrypt.hash(password, salt, function (err, hash) {
+            if (err) {
+                throw (err);
+            }
 
-        compare(password, login.password, function (err, result) {
-            // result == true
-            res.json({error : err, hasil : result})
-            // if (!err && result) {
-            //     //login
-            //     res.status(200);
-            //     res.json({
-            //         success: true,
-            //         message: `Success`
-            //     });
-            // } else {
-            //     res.status(404);
-            //     res.json({
-            //         success: false,
-            //         error: {
-            //             message: `Cannot login`
-            //         }
-            //     });
-            // }
-            // res.end();
+            bcrypt.compare(password, hash, function (err, result) {
+                if (!err && result) {
+                    const token = sign(login)
+                    res.status(200);
+                    res.json({success : true, authToken : token})
+                } else {
+                    res.status(404);
+                    res.json({
+                        success: false,
+                        error: {
+                            message: err
+                        }
+                    })
+                }
+            });
         });
-        // try {
-            
 
-        // } catch (e) {
-        //     res.json({
-        //         message: e
-        //     })
-        // }
+    } else {
+        res.status(405);
+        res.end(`Method ${req.method} not allow`);
     }
 }
