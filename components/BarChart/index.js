@@ -11,13 +11,11 @@ class Chart extends React.Component {
         <ResponsiveBar
           data={data}
           keys={config.keys}
-          indexBy="country"
+          indexBy="kehadiran"
           margin={config.margin}
           padding={0.3}
-          colors="nivo"
+          colors={{ scheme: 'nivo' }}
           colorBy="id"
-          defs={config.defs}
-          fill={config.fill}
           borderColor="inherit:darker(1.6)"
           axisTop={null}
           axisRight={null}
