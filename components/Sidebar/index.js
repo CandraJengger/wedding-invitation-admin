@@ -6,6 +6,7 @@ import {
   MailOutlined,
   TeamOutlined,
   HomeOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 const { Sider } = Layout;
 
@@ -32,6 +33,11 @@ const index = ({ collapsed, onCollapse }) => {
         <Menu.Item key="4" icon={<SmileOutlined />}>
           <Link href="/doa-dan-harapan">
             <a>Doa & Harapan</a>
+          </Link>
+        </Menu.Item>
+        <Menu.Item key="5" icon={<UserOutlined />}>
+          <Link href="/users">
+            <a>Setting User</a>
           </Link>
         </Menu.Item>
       </Menu>
