@@ -12,6 +12,7 @@
     "@nivo/core": "^0.67.0",
     "@prisma/client": "^2.20.1",
     "antd": "^4.15.1",
+    "axios": "^0.21.1",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "jsonwebtoken": "^8.5.1",

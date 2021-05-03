@@ -1,5 +1,9 @@
 import React from 'react';
 
-export default function Login() {
+const Login = () => {
   return <div>Ini Login</div>;
-}
+};
+
+Login.layout = 'plain';
+
+export default Login;
