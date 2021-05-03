@@ -1,65 +1,129 @@
-import prisma from '../../../lib/prisma'
+import prisma from '../../../lib/prisma';
+import authenticate from '../middleware';
 
-export default async function handle(req, res) {
+const handler = async (req, res) => {
   const invitationId = req.query.id
 
   if (req.method === 'GET') {
-    handleGET(invitationId, res)
-  } else if (req.method === 'DELETE') {
-    handleDELETE(invitationId, res)
-  } else {
-    throw new Error(
-      `The HTTP ${req.method} method is not supported at this route.`
-    )
-  }
-}
-
-// GET /api/post/:id
-async function handleGET(invitationId, res) {
-  try {
-    const invitation = await prisma.invitation.findUnique({
-      where: {
-        id_invitation: Number(invitationId)
-      }
-    })
-
-    if (invitation.length != 0) {
-      res.status(200);
-      res.json({
-        success: true,
-        data: {
-          invitation
+    try {
+      const invitation = await prisma.invitation.findUnique({
+        where: {
+          id_invitation: Number(invitationId)
         }
       })
-    } else {
-      res.json({
+  
+      if (!invitation) {
+        return res.json({
+          success: false,
+          error: {
+            code: 404,
+            message: "Not Found!"
+          }
+        });
+        
+      } 
+      return res.status(200).
+        json({
+          success: true,
+          data: {
+            invitation
+          }
+        });
+  
+    } catch (e) {
+      console.log(e);
+      return res.status(500)
+      .json({
         success: false,
         error: {
-          code: 404,
-          message: "Not Found"
+          message: `Internal server error!`
+        }
+      }).
+      end();
+    }
+  } else if (req.method === 'DELETE') {
+    try {
+      const invitation = await prisma.invitation.delete({
+        where: {
+          id_invitation: Number(invitationId)
+        },
+      });
+
+      return res.status(200).
+      json({
+        success : true, 
+        data : {
+          message : `Success delete data`
         }
       });
-    }
-    res.end();
+    } catch (error) {
+      console.log(error);
+      if (error.code == 'P2025') {
+        return res.status(404).json({
+          success : false,
+          error : {
+            message : error.meta.cause
+          }
+        });
+      }
 
-  } catch (e) {
-    res.json({
-      success: false,
-      error: {
-        message:e
+      return res.status(500).
+      json({
+        success : false,
+        error : {
+          message : `Internal server error!`
+        }
+      }).
+      end();
+    }
+    
+  } else if (req.method === 'PUT') {
+    const {name, show} = req.body;
+
+    try {
+      const updateInvit = await prisma.invitation.update({
+        where : {
+          id_invitation : Number(invitationId)
+        },
+        data : {
+          name : name,
+          show : show
+        }
+      });
+
+      if (updateInvit.length == 0) {
+        return res.status(404).json({
+          success : false,
+          error : {
+            message : `Not Found!`
+          }
+        });
+      }
+
+      return res.status(200).json({
+        success : true,
+        data : {
+          message : `Success update data`
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        success : false,
+        error : {
+          message : `Internal server error!`
+        }
+      })
+    }
+  } else {
+    return res.status(405).
+    json({
+      success : false,
+      error : {
+        message : `The HTTP ${req.method} method is not supported at this route.`
       }
     });
-    res.end();
   }
-
 }
 
-// DELETE /api/post/:id
-async function handleDELETE(invitationId, res) {
-  const invitation = await prisma.invitation.delete({
-    where: {
-      id_invitation: Number(invitationId)
-    },
-  })
-  res.json(invitation)
-}
+export default authenticate(handler);
