@@ -12,13 +12,20 @@ generator client {
 
 model user {
   id_user Int @id @default(autoincrement())
-  username String
-  password String
+  username String @db.VarChar(50)
+  password String @db.VarChar(144)
+  image String?
 }
 
 model invitation {
   id_invitation Int @id @default(autoincrement())
-  name String
-  attending String
-  wish String
+  name String? @unique @db.VarChar(144)
+  attending Boolean @default(false)
+  wish String @db.VarChar(144) @default("")
+  show Boolean? @default(false)
+}
+
+model link_youtube {
+  id_link Int @id @default(autoincrement())
+  url String @db.VarChar(144)
 }
