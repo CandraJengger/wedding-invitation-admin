@@ -1,9 +1,10 @@
-import Head from 'next/head';
+import { myGet } from '../helper/myGet';
 import { Row, Col, Statistic } from 'antd';
 import { BarChart } from '../components';
 import styles from '../styles/Home.module.css';
 
-export default function Home() {
+export default function Home({ data }) {
+  console.log(data);
   return (
     <Row>
       <Col
@@ -29,13 +30,12 @@ export default function Home() {
   );
 }
 
-export const getServerSideProps = (context) => {
-  const { req, res } = context;
-  const { cookies } = req;
-
-  console.log(cookies.tokenAccess);
+export const getServerSideProps = async (ctx) => {
+  const response = await myGet('http://localhost:3000/api/invitation', ctx);
 
   return {
-    props: {},
+    props: {
+      data: response,
+    },
   };
 };
