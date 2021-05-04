@@ -28,3 +28,14 @@ export default function Home() {
     </Row>
   );
 }
+
+export const getServerSideProps = (context) => {
+  const { req, res } = context;
+  const { cookies } = req;
+
+  console.log(cookies.tokenAccess);
+
+  return {
+    props: {},
+  };
+};

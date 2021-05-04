@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import Router from 'next/router';
 import Head from 'next/head';
+import axios from 'axios';
 import { Row, Col } from 'antd';
 import { Form, Input, Button, Card } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
@@ -9,7 +11,18 @@ const Login = () => {
 
   const onFinish = (values) => {
     setLoading(true);
-    console.log('Received values of form: ', values);
+    axios
+      .post('/api/login', {
+        username: values.username,
+        password: values.password,
+      })
+      .then(() => {
+        setLoading(false);
+        Router.push('/');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
