@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Row, Col, Table } from 'antd';
 import { Card, Text, Pagination } from '../../components';
+import { myGet } from '../../helper/myGet';
 
 const columns = [
   {
@@ -13,40 +14,48 @@ const columns = [
   },
   {
     title: 'Keterangan',
-    dataIndex: 'keterangan',
-    sorter: (a, b) => a.keterangan.length - b.keterangan.length,
+    dataIndex: 'attending',
+    sorter: (a, b) => a.attending.length - b.attending.length,
     sortDirections: ['descend'],
   },
 ];
 
-const data = [
-  {
-    key: '1',
-    name: 'John Brown',
-    keterangan: 'Hadir',
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    keterangan: 'Hadir',
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    keterangan: 'Hadir',
-  },
-  {
-    key: '4',
-    name: 'Jim Red',
-    keterangan: 'Hadir',
-  },
-];
+// const data = [
+//   {
+//     key: '1',
+//     name: 'John Brown',
+//     keterangan: 'Hadir',
+//   },
+//   {
+//     key: '2',
+//     name: 'Jim Green',
+//     keterangan: 'Hadir',
+//   },
+//   {
+//     key: '3',
+//     name: 'Joe Black',
+//     keterangan: 'Hadir',
+//   },
+//   {
+//     key: '4',
+//     name: 'Jim Red',
+//     keterangan: 'Hadir',
+//   },
+// ];
 
 function onChange(pagination, filters, sorter, extra) {
   console.log('params', pagination, filters, sorter, extra);
 }
 
-const Kehadiran = () => {
+const Kehadiran = ({response}) => {
+  const newData = response.invitations.map(item => {
+    return {
+      ...item,
+      attending: item.attending ? 'Hadir': 'Tidak Hadir'
+    }
+  })
+  const [data, setData] = useState(newData)
+  
   return (
     <>
       <Row>
@@ -64,3 +73,14 @@ const Kehadiran = () => {
 };
 
 export default Kehadiran;
+
+
+export const getServerSideProps = async (ctx) => {
+  const response = await myGet('http://localhost:3000/api/invitation', ctx);
+
+  return {
+    props: {
+      response: response.data,
+    },
+  };
+};

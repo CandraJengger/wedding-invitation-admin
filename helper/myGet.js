@@ -17,6 +17,7 @@ export async function myGet(url, ctx) {
       },
     });
   } catch (err) {
+    console.log(err)
     if (err.response.status >= 400 && err.response.status < 600) {
       ctx.res.writeHead(302, {
         Location: 'http://localhost:3000/login',
