@@ -5,7 +5,7 @@ import { Popconfirm, message } from 'antd';
 
 const { Meta } = Card;
 
-const CardComponent = () => {
+const CardComponent = ({ title = '', content = '' }) => {
   const [loading, setLoading] = useState(false);
 
   const [visible, setVisible] = useState(false);
@@ -48,7 +48,7 @@ const CardComponent = () => {
       ]}
     >
       <Skeleton loading={loading} avatar active>
-        <Meta title="Card title" description="This is the description" />
+        <Meta title={title} description={content} />
       </Skeleton>
     </Card>
   );

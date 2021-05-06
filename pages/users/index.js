@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Row, Col, Table, Space, Button, Modal, Input } from 'antd';
 import { Text } from '../../components';
+import { myGet } from '../../helper/myGet';
 
 const { confirm } = Modal;
 
@@ -11,31 +12,32 @@ import {
   ExclamationCircleOutlined,
 } from '@ant-design/icons';
 
-const Users = () => {
-  const [user, setUser] = useState({
-    name: '',
-    address: '',
-    password: '',
+const Users = ({response}) => {
+  const newData = response.users.map((item) => {
+    return {
+      ...item,
+    };
   });
+  const [data, setData] = useState(newData);
   const [loading, setLoading] = useState(false);
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
 
   const columns = [
     {
-      title: 'Nama',
-      dataIndex: 'name',
+      title: 'Username',
+      dataIndex: 'username',
       // specify the condition of filtering result
       // here is that finding the name started with `value`
-      sorter: (a, b) => a.name.length - b.name.length,
+      sorter: (a, b) => a.username.length - b.username.length,
       sortDirections: ['descend'],
     },
-    {
-      title: 'Alamat',
-      dataIndex: 'alamat',
-      sorter: (a, b) => a.keterangan.length - b.keterangan.length,
-      sortDirections: ['descend'],
-    },
+    // {
+    //   title: 'Alamat',
+    //   dataIndex: 'alamat',
+    //   sorter: (a, b) => a.keterangan.length - b.keterangan.length,
+    //   sortDirections: ['descend'],
+    // },
     {
       title: 'Action',
       key: 'action',
@@ -58,18 +60,18 @@ const Users = () => {
     },
   ];
 
-  const data = [
-    {
-      key: '1',
-      name: 'John Brown',
-      alamat: 'Ponorogo',
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      alamat: 'Kebonsari',
-    },
-  ];
+  // const data = [
+  //   {
+  //     key: '1',
+  //     name: 'John Brown',
+  //     alamat: 'Ponorogo',
+  //   },
+  //   {
+  //     key: '2',
+  //     name: 'Jim Green',
+  //     alamat: 'Kebonsari',
+  //   },
+  // ];
 
   function onChange(pagination, filters, sorter, extra) {
     console.log('params', pagination, filters, sorter, extra);
@@ -230,5 +232,16 @@ const Users = () => {
     </>
   );
 };
+
+export const getServerSideProps = async (ctx) => {
+  const response = await myGet('http://localhost:3000/api/user', ctx);
+
+  return {
+    props: {
+      response: response.data,
+    },
+  };
+};
+
 
 export default Users;
