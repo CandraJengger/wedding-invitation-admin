@@ -42,7 +42,12 @@ const Kehadiran = ({ response }) => {
       </Row>
       <Row>
         <Col xs={24}>
-          <Table columns={columns} dataSource={data} onChange={onChange} />
+          <Table
+            columns={columns}
+            dataSource={data}
+            onChange={onChange}
+            rowKey="id_invitation"
+          />
         </Col>
       </Row>
     </>
