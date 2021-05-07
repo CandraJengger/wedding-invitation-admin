@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import Router from 'next/router';
+import XLSX from 'xlsx';
 import { Row, Col, Table, Button, Modal, Upload, message } from 'antd';
 import { Text } from '../../components';
 import { myGet } from '../../helper/myGet';
 
-import { PlusOutlined, InboxOutlined } from '@ant-design/icons';
+import {
+  UploadOutlined,
+  InboxOutlined,
+  DownloadOutlined,
+} from '@ant-design/icons';
+import axios from 'axios';
 const { Dragger } = Upload;
 
 const Undangan = ({ response, cookie, tokenAccess }) => {
@@ -20,12 +26,34 @@ const Undangan = ({ response, cookie, tokenAccess }) => {
     console.log('params', pagination, filters, sorter, extra);
   }
 
+  const exportFile = (data) => {
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Daftar Undangan');
+    XLSX.writeFile(wb, 'dataundangan_url.xlsx');
+  };
   const showAddModal = () => {
     setIsAddModalVisible(true);
   };
 
   const handleAddModalCancel = () => {
     setIsAddModalVisible(false);
+  };
+
+  const handleGenerateNewFile = () => {
+    setLoading(true);
+    axios
+      .get('http://localhost:3000/api/invitation/generate', {
+        headers: {
+          cookie: cookie,
+          Authorization: tokenAccess,
+        },
+      })
+      .then((res) => {
+        setLoading(false);
+        exportFile(res.data.data.invitations);
+      })
+      .catch((err) => console.log(err));
   };
 
   useEffect(() => {
@@ -76,9 +104,26 @@ const Undangan = ({ response, cookie, tokenAccess }) => {
           <Text level={2} text="Undangan" />
         </Col>
         <Col xs={24} style={{ marginBottom: '24px' }}>
-          <Button type="primary" onClick={showAddModal}>
-            <PlusOutlined />
+          <Button
+            type="primary"
+            onClick={showAddModal}
+            style={{ marginRight: '16px' }}
+          >
+            <UploadOutlined />
             Upload undangan
+          </Button>
+          <Button
+            type="primary"
+            loading={loading}
+            onClick={handleGenerateNewFile}
+            style={{
+              marginRight: '16px',
+              background: '#0aa41a',
+              borderColor: '#0aa41a',
+            }}
+          >
+            <DownloadOutlined />
+            Generate undangan
           </Button>
         </Col>
       </Row>
