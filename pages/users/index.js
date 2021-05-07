@@ -1,4 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import Router from 'next/router';
 import { Row, Col, Table, Space, Button, Modal, Input } from 'antd';
 import { Text } from '../../components';
 import { myGet } from '../../helper/myGet';
@@ -12,81 +14,45 @@ import {
   ExclamationCircleOutlined,
 } from '@ant-design/icons';
 
-const Users = ({response}) => {
-  const newData = response.users.map((item) => {
-    return {
-      ...item,
-    };
-  });
-  const [data, setData] = useState(newData);
+const Users = ({ users, cookie, tokenAccess }) => {
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [user, setUser] = useState({
+    username: '',
+    password: '',
+    image: 'dummy.png',
+  });
 
-  const columns = [
-    {
-      title: 'Username',
-      dataIndex: 'username',
-      // specify the condition of filtering result
-      // here is that finding the name started with `value`
-      sorter: (a, b) => a.username.length - b.username.length,
-      sortDirections: ['descend'],
-    },
-    // {
-    //   title: 'Alamat',
-    //   dataIndex: 'alamat',
-    //   sorter: (a, b) => a.keterangan.length - b.keterangan.length,
-    //   sortDirections: ['descend'],
-    // },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (text, record) => (
-        <Space size="middle">
-          <Button
-            onClick={showEditModal}
-            icon={<EditOutlined />}
-            size="large"
-          />
-          <Button
-            onClick={showDeleteConfirm}
-            type="primary"
-            danger
-            icon={<DeleteOutlined />}
-            size="large"
-          />
-        </Space>
-      ),
-    },
-  ];
-
-  // const data = [
-  //   {
-  //     key: '1',
-  //     name: 'John Brown',
-  //     alamat: 'Ponorogo',
-  //   },
-  //   {
-  //     key: '2',
-  //     name: 'Jim Green',
-  //     alamat: 'Kebonsari',
-  //   },
-  // ];
+  const refreshData = () => {
+    Router.push(Router.asPath);
+  };
 
   function onChange(pagination, filters, sorter, extra) {
     console.log('params', pagination, filters, sorter, extra);
   }
 
-  function showDeleteConfirm() {
+  function showDeleteConfirm(id) {
     confirm({
-      title: 'Are you sure delete this task?',
+      title: 'Apakah anda yakin ingin menghapus akun ini ?',
       icon: <ExclamationCircleOutlined />,
-      content: 'Some descriptions',
+      content: '',
       okText: 'Yes',
       okType: 'danger',
       cancelText: 'No',
       onOk() {
-        console.log('OK');
+        axios
+          .delete(`http://localhost:3000/api/user/${id}`, {
+            headers: {
+              cookie: cookie,
+              Authorization: tokenAccess,
+            },
+          })
+          .then((res) => {
+            refreshData();
+          })
+          .catch((err) => console.log(err));
       },
       onCancel() {
         console.log('Cancel');
@@ -100,11 +66,19 @@ const Users = ({response}) => {
 
   const handleAddModalOk = () => {
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setIsAddModalVisible(false);
-      console.log(user);
-    }, 2000);
+    axios
+      .post('http://localhost:3000/api/user', user, {
+        headers: {
+          cookie: cookie,
+          Authorization: tokenAccess,
+        },
+      })
+      .then(() => {
+        refreshData();
+        setLoading(false);
+        setIsAddModalVisible(false);
+      })
+      .catch((err) => console.log(err));
   };
 
   const handleAddModalCancel = () => {
@@ -117,15 +91,61 @@ const Users = ({response}) => {
 
   const handleEditModalOk = () => {
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setIsEditModalVisible(false);
-    }, 2000);
+    axios
+      .put(`http://localhost:3000/api/user/${user.id_user}`, user, {
+        headers: {
+          cookie: cookie,
+          Authorization: tokenAccess,
+        },
+      })
+      .then((res) => {
+        refreshData();
+        setLoading(false);
+        setIsEditModalVisible(false);
+      })
+      .catch((err) => console.log(err));
   };
 
   const handleEditModalCancel = () => {
     setIsEditModalVisible(false);
   };
+
+  const columns = [
+    {
+      title: 'Username',
+      dataIndex: 'username',
+      sorter: (a, b) => a.username.length - b.username.length,
+      sortDirections: ['descend'],
+    },
+
+    {
+      title: 'Action',
+      key: 'action',
+      render: (text, record) => (
+        <Space size="middle">
+          <Button
+            onClick={() => {
+              showEditModal();
+              setUser(record);
+            }}
+            icon={<EditOutlined />}
+            size="large"
+          />
+          <Button
+            onClick={() => showDeleteConfirm(record.id_user)}
+            type="primary"
+            danger
+            icon={<DeleteOutlined />}
+            size="large"
+          />
+        </Space>
+      ),
+    },
+  ];
+
+  useEffect(() => {
+    setIsRefreshing(false);
+  }, [users]);
 
   return (
     <>
@@ -142,7 +162,12 @@ const Users = ({response}) => {
       </Row>
       <Row>
         <Col xs={24}>
-          <Table columns={columns} dataSource={data} onChange={onChange} />
+          <Table
+            columns={columns}
+            dataSource={users}
+            onChange={onChange}
+            rowKey="id_user"
+          />
         </Col>
       </Row>
 
@@ -168,17 +193,11 @@ const Users = ({response}) => {
         <div style={{ marginBottom: '1rem' }}>
           <label>Name</label>
           <Input
-            onChange={(e) => setUser({ ...user, name: e.target.value })}
+            onChange={(e) => setUser({ ...user, username: e.target.value })}
             placeholder="Input nama"
           />
         </div>
-        <div style={{ marginBottom: '1rem' }}>
-          <label>Alamat</label>
-          <Input
-            onChange={(e) => setUser({ ...user, address: e.target.value })}
-            placeholder="Input alamat"
-          />
-        </div>
+
         <div style={{ marginBottom: '1rem' }}>
           <label>Password</label>
           <Input.Password
@@ -210,15 +229,9 @@ const Users = ({response}) => {
         <div style={{ marginBottom: '1rem' }}>
           <label>Name</label>
           <Input
-            onChange={(e) => setUser({ ...user, name: e.target.value })}
+            onChange={(e) => setUser({ ...user, username: e.target.value })}
             placeholder="Input nama"
-          />
-        </div>
-        <div style={{ marginBottom: '1rem' }}>
-          <label>Alamat</label>
-          <Input
-            onChange={(e) => setUser({ ...user, address: e.target.value })}
-            placeholder="Input alamat"
+            value={user.username}
           />
         </div>
         <div style={{ marginBottom: '1rem' }}>
@@ -235,13 +248,19 @@ const Users = ({response}) => {
 
 export const getServerSideProps = async (ctx) => {
   const response = await myGet('http://localhost:3000/api/user', ctx);
+  const cookie = ctx.req.headers.cookie;
+  const tokenAccess =
+    ctx.req.cookies.tokenAccess === undefined
+      ? ''
+      : ctx.req.cookies.tokenAccess;
 
   return {
     props: {
-      response: response.data,
+      users: response.data.users,
+      cookie,
+      tokenAccess,
     },
   };
 };
-
 
 export default Users;
