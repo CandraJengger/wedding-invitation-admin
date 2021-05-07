@@ -11,7 +11,7 @@ const cors = corsMiddleware(
 export default async (req, res) => {
   await cors(req, res);
 
-  const nameInvit = req.query.param.replace('-', ' ');
+  const nameInvit = req.query.param.replace(/-/g, ' ');
 
   if (req.method === 'GET') {
     try {
