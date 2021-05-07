@@ -4,14 +4,13 @@ import { Card, Text, Pagination } from '../../components';
 import { myGet } from '../../helper/myGet';
 
 const DoaHarapan = ({ response }) => {
-  const newData = response.invitations.map(item => {
+  const newData = response.invitations.map((item) => {
     return {
       ...item,
-      wish: item.wish ? item.wish : 'Belum mengisi kehadiran'
-    }
-  })
-  const [data, setData] = useState(newData)
-
+      wish: item.wish ? item.wish : 'Belum mengisi kehadiran',
+    };
+  });
+  const [data, setData] = useState(newData);
 
   return (
     <>
@@ -21,12 +20,12 @@ const DoaHarapan = ({ response }) => {
         </Col>
       </Row>
       <Row>
-        {data !== undefined && data.map(item => (
-        <Col xs={24} md={12} lg={8} key={item.id_invitation}>
-          <Card title={item.name} content={item.wish} />
-        </Col>
-        ))}
-        
+        {data !== undefined &&
+          data.map((item) => (
+            <Col xs={24} md={12} lg={8} key={item.id_invitation}>
+              <Card title={item.name} content={item.wish} show={item.show} />
+            </Col>
+          ))}
       </Row>
       <Row justify="end" style={{ marginTop: '100px' }}>
         <Col>
@@ -46,6 +45,5 @@ export const getServerSideProps = async (ctx) => {
     },
   };
 };
-
 
 export default DoaHarapan;

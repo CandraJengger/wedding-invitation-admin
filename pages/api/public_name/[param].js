@@ -1,9 +1,18 @@
+import Cors from 'cors';
 import prisma from '../../../lib/prisma';
-import slugify from 'slugify';
+import corsMiddleware from '../cors';
+
+const cors = corsMiddleware(
+  Cors({
+    methods: ['GET'],
+  })
+);
 
 export default async (req, res) => {
-  const nameInvit = req.query.param;
-  // console.log(nameInvit);
+  await cors(req, res);
+
+  const nameInvit = req.query.param.replace('-', ' ');
+
   if (req.method === 'GET') {
     try {
       const data = await prisma.invitation.findUnique({

@@ -1,55 +1,28 @@
 import React, { useState } from 'react';
-import { Skeleton, Card } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
-import { Popconfirm, message } from 'antd';
+import { Switch, Card } from 'antd';
 
 const { Meta } = Card;
 
-const CardComponent = ({ title = '', content = '' }) => {
-  const [loading, setLoading] = useState(false);
+const CardComponent = ({ title = '', content = '', show = false }) => {
+  const [visible, setVisible] = useState(show);
 
-  const [visible, setVisible] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
-
-  const showPopconfirm = () => {
-    setVisible(true);
-  };
-
-  const handleOk = () => {
-    setConfirmLoading(true);
-    setTimeout(() => {
-      setVisible(false);
-      setConfirmLoading(false);
-    }, 2000);
-  };
-
-  const handleCancel = () => {
-    console.log('Clicked cancel button');
-    setVisible(false);
-  };
+  function onChange(checked) {
+    console.log(`switch to ${checked}`);
+  }
 
   return (
     <Card
       style={{ width: 300, marginTop: 16 }}
       actions={[
-        <Popconfirm
-          title="Iki titleeeeeeeeeeeee"
-          visible={visible}
-          onConfirm={handleOk}
-          okButtonProps={{ loading: confirmLoading }}
-          onCancel={handleCancel}
-        >
-          <DeleteOutlined
-            onClick={showPopconfirm}
-            style={{ fontSize: '25px' }}
-            key="delete"
-          />
-        </Popconfirm>,
+        <Switch
+          checkedChildren="show"
+          unCheckedChildren="not show"
+          defaultChecked={visible ? true : false}
+          onChange={onChange}
+        />,
       ]}
     >
-      <Skeleton loading={loading} avatar active>
-        <Meta title={title} description={content} />
-      </Skeleton>
+      <Meta title={title} description={content} />
     </Card>
   );
 };

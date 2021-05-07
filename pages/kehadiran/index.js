@@ -16,46 +16,23 @@ const columns = [
     title: 'Keterangan',
     dataIndex: 'attending',
     sorter: (a, b) => a.attending.length - b.attending.length,
-    sortDirections: ['descend'],
+    sortDirections: ['ascend'],
   },
 ];
 
-// const data = [
-//   {
-//     key: '1',
-//     name: 'John Brown',
-//     keterangan: 'Hadir',
-//   },
-//   {
-//     key: '2',
-//     name: 'Jim Green',
-//     keterangan: 'Hadir',
-//   },
-//   {
-//     key: '3',
-//     name: 'Joe Black',
-//     keterangan: 'Hadir',
-//   },
-//   {
-//     key: '4',
-//     name: 'Jim Red',
-//     keterangan: 'Hadir',
-//   },
-// ];
-
-function onChange(pagination, filters, sorter, extra) {
-  console.log('params', pagination, filters, sorter, extra);
+function onChange(pagination) {
+  console.log('params', pagination);
 }
 
-const Kehadiran = ({response}) => {
-  const newData = response.invitations.map(item => {
+const Kehadiran = ({ response }) => {
+  const newData = response.invitations.map((item) => {
     return {
       ...item,
-      attending: item.attending ? 'Hadir': 'Tidak Hadir'
-    }
-  })
-  const [data, setData] = useState(newData)
-  
+      attending: item.attending ? 'Hadir' : 'Tidak Hadir',
+    };
+  });
+  const [data, setData] = useState(newData);
+
   return (
     <>
       <Row>
@@ -72,9 +49,6 @@ const Kehadiran = ({response}) => {
   );
 };
 
-export default Kehadiran;
-
-
 export const getServerSideProps = async (ctx) => {
   const response = await myGet('http://localhost:3000/api/invitation', ctx);
 
@@ -84,3 +58,5 @@ export const getServerSideProps = async (ctx) => {
     },
   };
 };
+
+export default Kehadiran;
