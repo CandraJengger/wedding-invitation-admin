@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Router from 'next/router';
 import { Row, Col, Table, Button, Modal, Upload, message } from 'antd';
 import { Text } from '../../components';
 import { myGet } from '../../helper/myGet';
@@ -6,25 +7,18 @@ import { myGet } from '../../helper/myGet';
 import { PlusOutlined, InboxOutlined } from '@ant-design/icons';
 const { Dragger } = Upload;
 
-const columns = [
-  {
-    title: 'Nama',
-    dataIndex: 'name',
-    // specify the condition of filtering result
-    // here is that finding the name started with `value`
-    sorter: (a, b) => a.name.length - b.name.length,
-    sortDirections: ['descend'],
-  },
-];
-
-function onChange(pagination, filters, sorter, extra) {
-  console.log('params', pagination, filters, sorter, extra);
-}
-
 const Undangan = ({ response, cookie, tokenAccess }) => {
-  const [data, setData] = useState(response.invitations);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+
+  const refreshData = () => {
+    Router.push(Router.asPath);
+  };
+
+  function onChange(pagination, filters, sorter, extra) {
+    console.log('params', pagination, filters, sorter, extra);
+  }
 
   const showAddModal = () => {
     setIsAddModalVisible(true);
@@ -33,6 +27,10 @@ const Undangan = ({ response, cookie, tokenAccess }) => {
   const handleAddModalCancel = () => {
     setIsAddModalVisible(false);
   };
+
+  useEffect(() => {
+    setIsRefreshing(false);
+  }, [response.invitations]);
 
   const props = {
     name: 'file',
@@ -52,11 +50,24 @@ const Undangan = ({ response, cookie, tokenAccess }) => {
       } else if (status === 'error') {
         message.error(`${info.file.name} file upload failed.`);
       }
+
+      refreshData();
     },
     onDrop(e) {
       console.log('Dropped files', e.dataTransfer.files);
     },
   };
+
+  const columns = [
+    {
+      title: 'Nama',
+      dataIndex: 'name',
+      // specify the condition of filtering result
+      // here is that finding the name started with `value`
+      sorter: (a, b) => a.name.length - b.name.length,
+      sortDirections: ['descend'],
+    },
+  ];
 
   return (
     <>
@@ -75,7 +86,7 @@ const Undangan = ({ response, cookie, tokenAccess }) => {
         <Col xs={24}>
           <Table
             columns={columns}
-            dataSource={data}
+            dataSource={response.invitations}
             onChange={onChange}
             rowKey="id_invitation"
           />
