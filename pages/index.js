@@ -2,9 +2,12 @@ import { myGet } from '../helper/myGet';
 import { Row, Col, Statistic } from 'antd';
 import { BarChart } from '../components';
 import styles from '../styles/Home.module.css';
+import { useState } from 'react';
 
-export default function Home({ data }) {
-  console.log(data);
+export default function Home({ response }) {
+  // console.log(response.invitations)
+  const newData = response.invitations.filter((item) => item.wish !== "");
+  
   return (
     <Row>
       <Col
@@ -19,7 +22,7 @@ export default function Home({ data }) {
         <Statistic
           valueStyle={{ fontSize: '2.6rem' }}
           title="Respon"
-          value={112893}
+          value={newData.length}
         />
       </Col>
 
@@ -35,7 +38,7 @@ export const getServerSideProps = async (ctx) => {
 
   return {
     props: {
-      data: response,
+      response: response.data,
     },
   };
 };
