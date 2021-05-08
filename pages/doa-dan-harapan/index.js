@@ -1,16 +1,55 @@
 import React, { useState } from 'react';
-import { Row, Col } from 'antd';
-import { Card, Text, Pagination } from '../../components';
+import { Row, Col, Table, Switch } from 'antd';
+import { Text, Pagination } from '../../components';
 import { myGet } from '../../helper/myGet';
 
 const DoaHarapan = ({ response }) => {
   const newData = response.invitations.map((item) => {
     return {
       ...item,
+      // show: item.show ? true : false,
       wish: item.wish ? item.wish : 'Belum mengisi kehadiran',
     };
   });
   const [data, setData] = useState(newData);
+  const [checked, setChecked] = useState({
+    show: false,
+  });
+
+  const columns = [
+    {
+      title: 'Username',
+      dataIndex: 'name',
+      // specify the condition of filtering result
+      // here is that finding the name started with `value`
+      sorter: (a, b) => a.username.length - b.username.length,
+      sortDirections: ['descend'],
+    },
+    {
+      title: 'Wish',
+      dataIndex: 'wish',
+      sorter: (a, b) => a.wish.length - b.wish.length,
+      sortDirections: ['descend'],
+    },
+    {
+      title: 'Action',
+      dataIndex: 'show',
+      key: 'action',
+      render: (text, record) => (
+        <Switch
+          checkedChildren="show"
+          unCheckedChildren="not show"
+          defaultChecked={text ? true : false}
+          // onChange={}
+        />            
+      ),
+    },
+  ];
+  
+  function onChange(pagination, filters, sorter, extra, checked) {
+    console.log('params', pagination, filters, sorter, extra);
+    console.log(`switch to ${checked}`);
+  }
 
   return (
     <>
@@ -20,12 +59,9 @@ const DoaHarapan = ({ response }) => {
         </Col>
       </Row>
       <Row>
-        {data !== undefined &&
-          data.map((item) => (
-            <Col xs={24} md={12} lg={8} key={item.id_invitation}>
-              <Card title={item.name} content={item.wish} show={item.show} />
-            </Col>
-          ))}
+        <Col xs={24}>
+          <Table columns={columns} dataSource={data} onChange={onChange} rowKey="id_invitation"/>
+        </Col>
       </Row>
       <Row justify="end" style={{ marginTop: '100px' }}>
         <Col>
