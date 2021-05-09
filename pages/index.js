@@ -5,9 +5,21 @@ import styles from '../styles/Home.module.css';
 import { useState } from 'react';
 
 export default function Home({ response }) {
-  // console.log(response.invitations)
-  const newData = response.invitations.filter((item) => item.wish !== "");
-  
+  const newData = response.invitations.filter((item) => item.wish !== '');
+  const dataHadir = response.invitations.filter((item) => item.attending);
+  const dataTidakHadir = response.invitations.filter((item) => !item.attending);
+
+  const [data, setData] = useState([
+    {
+      kehadiran: 'Total Hadir',
+      Hadir: dataHadir.length,
+    },
+    {
+      kehadiran: 'Total Tidak Hadir',
+      'Tidak Hadir': dataTidakHadir.length,
+    },
+  ]);
+
   return (
     <Row>
       <Col
@@ -20,14 +32,14 @@ export default function Home({ response }) {
         }}
       >
         <Statistic
-          valueStyle={{ fontSize: '2.6rem' }}
-          title="Respon"
+          valueStyle={{ fontSize: '2.6rem', textAlign: 'center' }}
+          title="Respon User"
           value={newData.length}
         />
       </Col>
 
       <Col xs={24} md={16}>
-        <BarChart />
+        <BarChart data={data} />
       </Col>
     </Row>
   );
