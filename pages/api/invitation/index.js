@@ -23,12 +23,43 @@ const upload = multer({
 const handler = async (req, res) => {
     if (req.method === 'GET') {
         // res.json({data : req.username});
+        const {name, wish} = req.query;
+        let invitations;
+        // return res.json({
+        //     name: name,
+        //     wish: wish,
+        // })
         try {
-            const invitations = await prisma.invitation.findMany({
-                orderBy: {
-                    id_invitation: 'desc'
-                }
-            });
+            if (name || wish) {
+                invitations = await prisma.invitation.findMany({
+                    where: {
+                        OR: [
+                            {
+                                name: {
+                                    contains: name,
+                                    mode: 'insensitive',
+                                }
+                            },
+                            {
+                                wish: {
+                                    contains: wish,
+                                    mode: 'insensitive',
+                                }
+                            }
+                        ]
+                    },
+                    orderBy: {
+                        id_invitation: 'desc',
+                    }
+                });
+            } else {
+                invitations = await prisma.invitation.findMany({
+                    orderBy: {
+                        id_invitation: 'desc'
+                    }
+                });
+            }
+            
             if (!invitations) {
                 return res.status(404).json({
                     success: false,
