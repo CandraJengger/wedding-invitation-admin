@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import Link from 'next/link';
 import { Menu, Layout } from 'antd';
 import {
@@ -7,6 +7,7 @@ import {
   TeamOutlined,
   HomeOutlined,
   UserOutlined,
+  YoutubeOutlined,
 } from '@ant-design/icons';
 const { Sider } = Layout;
 
@@ -35,7 +36,12 @@ const index = ({ collapsed, onCollapse }) => {
             <a>Doa & Harapan</a>
           </Link>
         </Menu.Item>
-        <Menu.Item key="5" icon={<UserOutlined />}>
+        <Menu.Item key="5" icon={<YoutubeOutlined />}>
+          <Link href="/url">
+            <a>Link URL Youtube</a>
+          </Link>
+        </Menu.Item>
+        <Menu.Item key="6" icon={<UserOutlined />}>
           <Link href="/users">
             <a>Setting User</a>
           </Link>
