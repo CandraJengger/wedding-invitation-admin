@@ -23,10 +23,6 @@ const Undangan = ({ response, cookie, tokenAccess }) => {
     Router.push(Router.asPath);
   };
 
-  function onChange(pagination, filters, sorter, extra) {
-    console.log('params', pagination, filters, sorter, extra);
-  }
-
   const exportFile = (data) => {
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
@@ -72,7 +68,7 @@ const Undangan = ({ response, cookie, tokenAccess }) => {
     onChange(info) {
       const { status } = info.file;
       if (status !== 'uploading') {
-        console.log(info.file, info.fileList);
+        // console.log(info.file, info.fileList);
       }
       if (status === 'done') {
         message.success(`${info.file.name} file uploaded successfully.`);
@@ -83,7 +79,7 @@ const Undangan = ({ response, cookie, tokenAccess }) => {
       refreshData();
     },
     onDrop(e) {
-      console.log('Dropped files', e.dataTransfer.files);
+      // console.log('Dropped files', e.dataTransfer.files);
     },
   };
 
@@ -133,7 +129,6 @@ const Undangan = ({ response, cookie, tokenAccess }) => {
           <Table
             columns={columns}
             dataSource={response.invitations}
-            onChange={onChange}
             rowKey="id_invitation"
           />
         </Col>
@@ -155,10 +150,6 @@ const Undangan = ({ response, cookie, tokenAccess }) => {
           </p>
           <p className="ant-upload-text">
             Click or drag file to this area to upload
-          </p>
-          <p className="ant-upload-hint">
-            Support for a single or bulk upload. Strictly prohibit from
-            uploading company data or other band files
           </p>
         </Dragger>
       </Modal>

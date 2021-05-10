@@ -30,10 +30,6 @@ const Users = ({ users, cookie, tokenAccess }) => {
     Router.push(Router.asPath);
   };
 
-  function onChange(pagination, filters, sorter, extra) {
-    console.log('params', pagination, filters, sorter, extra);
-  }
-
   function showDeleteConfirm(id) {
     confirm({
       title: 'Apakah anda yakin ingin menghapus akun ini ?',
@@ -163,12 +159,7 @@ const Users = ({ users, cookie, tokenAccess }) => {
       </Row>
       <Row>
         <Col xs={24}>
-          <Table
-            columns={columns}
-            dataSource={users}
-            onChange={onChange}
-            rowKey="id_user"
-          />
+          <Table columns={columns} dataSource={users} rowKey="id_user" />
         </Col>
       </Row>
 

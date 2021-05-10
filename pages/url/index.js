@@ -23,10 +23,6 @@ const Url = ({ url_link, cookie, tokenAccess }) => {
     Router.push(Router.asPath);
   };
 
-  function onChange(pagination, filters, sorter, extra) {
-    console.log('params', pagination, filters, sorter, extra);
-  }
-
   const showAddModal = () => {
     setIsAddModalVisible(url_link.length == 0 ? true : false);
   };
@@ -122,12 +118,7 @@ const Url = ({ url_link, cookie, tokenAccess }) => {
       </Row>
       <Row>
         <Col xs={24}>
-          <Table
-            columns={columns}
-            dataSource={url_link}
-            onChange={onChange}
-            rowKey="id_link"
-          />
+          <Table columns={columns} dataSource={url_link} rowKey="id_link" />
         </Col>
       </Row>
 

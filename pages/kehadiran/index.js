@@ -51,10 +51,6 @@ const Kehadiran = ({ response, tokenAccess }) => {
     },
   ];
 
-  function onChange(pagination) {
-    console.log('params', pagination);
-  }
-
   useEffect(() => {
     setIsRefreshing(false);
   }, [response.invitations]);
@@ -75,12 +71,7 @@ const Kehadiran = ({ response, tokenAccess }) => {
       </Row>
       <Row>
         <Col xs={24}>
-          <Table
-            columns={columns}
-            dataSource={data}
-            onChange={onChange}
-            rowKey="id_invitation"
-          />
+          <Table columns={columns} dataSource={data} rowKey="id_invitation" />
         </Col>
       </Row>
     </>

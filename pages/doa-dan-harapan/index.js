@@ -33,7 +33,6 @@ const DoaHarapan = ({ response, cookie, tokenAccess }) => {
       )
       .then(() => {
         refreshData();
-        console.log('success');
       })
       .catch((err) => console.log(err));
   };
@@ -86,11 +85,6 @@ const DoaHarapan = ({ response, cookie, tokenAccess }) => {
     },
   ];
 
-  function onChange(pagination, filters, sorter, extra, checked) {
-    console.log('params', pagination, filters, sorter, extra);
-    console.log(`switch to ${checked}`);
-  }
-
   useEffect(() => {
     setIsRefreshing(false);
   }, [response.invitations]);
@@ -111,12 +105,7 @@ const DoaHarapan = ({ response, cookie, tokenAccess }) => {
       </Row>
       <Row>
         <Col xs={24}>
-          <Table
-            columns={columns}
-            dataSource={data}
-            onChange={onChange}
-            rowKey="id_invitation"
-          />
+          <Table columns={columns} dataSource={data} rowKey="id_invitation" />
         </Col>
       </Row>
     </>

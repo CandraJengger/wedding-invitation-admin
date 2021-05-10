@@ -59,7 +59,6 @@ export default async (req, res) => {
   } else if (req.method === 'PUT') {
     const { wish, attending } = req.body;
 
-    console.log(invitId, wish, attending);
     try {
       const updateInvit = await prisma.invitation.update({
         where: {
