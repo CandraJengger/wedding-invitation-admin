@@ -12,7 +12,7 @@ const handler = async (req, res) => {
       });
 
       invitations.forEach((v, i) => {
-        v.link = 'https://dev-wedding-inv.netlify.app/#' + slugify(v.name);
+        v.link = 'https://kiki-dimas-wedding.vercel.app/#' + slugify(v.name);
         v.number = i + 1;
       });
 
