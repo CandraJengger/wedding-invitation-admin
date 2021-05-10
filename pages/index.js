@@ -6,13 +6,16 @@ import styles from '../styles/Home.module.css';
 import { server } from '../config/server';
 
 export default function Home({ response }) {
-  const newData = response.invitations.filter((item) => item.wish !== '');
-  const dataHadir = response.invitations.filter((item) => item.attending);
-  const dataTidakHadir = response.invitations.filter((item) => !item.attending);
-
   const [data, setData] = useState([]);
+  const [countData, setCountData] = useState(0);
 
   useEffect(() => {
+    const newData = response.invitations.filter((item) => item.wish !== '');
+    const dataHadir = response.invitations.filter((item) => item.attending);
+    const dataTidakHadir = response.invitations.filter(
+      (item) => !item.attending
+    );
+
     setData([
       {
         kehadiran: 'Total Hadir',
@@ -23,6 +26,7 @@ export default function Home({ response }) {
         'Tidak Hadir': dataTidakHadir.length,
       },
     ]);
+    setCountData(newData.length);
   }, []);
 
   return (
@@ -39,7 +43,7 @@ export default function Home({ response }) {
         <Statistic
           valueStyle={{ fontSize: '2.6rem', textAlign: 'center' }}
           title="Respon User"
-          value={newData.length}
+          value={countData}
         />
       </Col>
 

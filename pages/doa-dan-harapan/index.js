@@ -40,7 +40,7 @@ const DoaHarapan = ({ response, cookie, tokenAccess }) => {
 
   const handleSearch = (value) => {
     axios
-      .get(`http://localhost:3000/api/invitation/?name=${value}`, {
+      .get(`${server}/api/invitation/?name=${value}`, {
         headers: {
           Authorization: tokenAccess,
         },
