@@ -4,6 +4,7 @@ import { Row, Col, Table, Switch, Input } from 'antd';
 import { Text } from '../../components';
 import { myGet } from '../../helper/myGet';
 import axios from 'axios';
+import { server } from '../../config/server';
 
 const { Search } = Input;
 
@@ -18,7 +19,7 @@ const DoaHarapan = ({ response, cookie, tokenAccess }) => {
   const toggleShow = (user) => {
     axios
       .put(
-        `http://localhost:3000/api/invitation/${user.id_invitation}`,
+        `${server}/api/invitation/${user.id_invitation}`,
         {
           name: user.name,
           show: !user.show,
@@ -123,7 +124,7 @@ const DoaHarapan = ({ response, cookie, tokenAccess }) => {
 };
 
 export const getServerSideProps = async (ctx) => {
-  const response = await myGet('http://localhost:3000/api/invitation', ctx);
+  const response = await myGet(`${server}/api/invitation`, ctx);
   const cookie = ctx.req.headers.cookie;
   const tokenAccess =
     ctx.req.cookies.tokenAccess === undefined

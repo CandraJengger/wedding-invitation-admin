@@ -4,6 +4,7 @@ import Router from 'next/router';
 import { Row, Col, Table, Space, Button, Modal, Input } from 'antd';
 import { Text } from '../../components';
 import { myGet } from '../../helper/myGet';
+import { server } from '../../config/server';
 
 const { confirm } = Modal;
 
@@ -43,7 +44,7 @@ const Users = ({ users, cookie, tokenAccess }) => {
       cancelText: 'No',
       onOk() {
         axios
-          .delete(`http://localhost:3000/api/user/${id}`, {
+          .delete(`${server}/api/user/${id}`, {
             headers: {
               Authorization: tokenAccess,
             },
@@ -67,7 +68,7 @@ const Users = ({ users, cookie, tokenAccess }) => {
   const handleAddModalOk = () => {
     setLoading(true);
     axios
-      .post('http://localhost:3000/api/user', user, {
+      .post(`${server}/api/user`, user, {
         headers: {
           Authorization: tokenAccess,
         },
@@ -92,7 +93,7 @@ const Users = ({ users, cookie, tokenAccess }) => {
   const handleEditModalOk = () => {
     setLoading(true);
     axios
-      .put(`http://localhost:3000/api/user/${user.id_user}`, user, {
+      .put(`${server}/api/user/${user.id_user}`, user, {
         headers: {
           Authorization: tokenAccess,
         },
@@ -247,7 +248,7 @@ const Users = ({ users, cookie, tokenAccess }) => {
 };
 
 export const getServerSideProps = async (ctx) => {
-  const response = await myGet('http://localhost:3000/api/user', ctx);
+  const response = await myGet(`${server}/api/user`, ctx);
   const cookie = ctx.req.headers.cookie;
   const tokenAccess =
     ctx.req.cookies.tokenAccess === undefined

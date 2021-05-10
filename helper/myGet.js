@@ -1,5 +1,6 @@
 import axios from 'axios';
 import Router from 'next/router';
+import { server } from '../config/server';
 
 export async function myGet(url, ctx) {
   let response = '';
@@ -20,7 +21,7 @@ export async function myGet(url, ctx) {
     console.log(err);
     if (err.response.status >= 400 && err.response.status < 600) {
       ctx.res.writeHead(302, {
-        Location: 'http://localhost:3000/login',
+        Location: `${server}/login`,
       });
       ctx.res.end();
       return {
