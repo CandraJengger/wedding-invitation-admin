@@ -45,9 +45,9 @@ const Undangan = ({ response, cookie, tokenAccess }) => {
     axios
       .get('http://localhost:3000/api/invitation/generate', {
         headers: {
-          cookie: cookie,
           Authorization: tokenAccess,
         },
+        withCredentials: true,
       })
       .then((res) => {
         setLoading(false);

@@ -1,24 +1,28 @@
+import { useState, useEffect } from 'react';
 import { myGet } from '../helper/myGet';
 import { Row, Col, Statistic } from 'antd';
 import { BarChart } from '../components';
 import styles from '../styles/Home.module.css';
-import { useState } from 'react';
 
 export default function Home({ response }) {
   const newData = response.invitations.filter((item) => item.wish !== '');
   const dataHadir = response.invitations.filter((item) => item.attending);
   const dataTidakHadir = response.invitations.filter((item) => !item.attending);
 
-  const [data, setData] = useState([
-    {
-      kehadiran: 'Total Hadir',
-      Hadir: dataHadir.length,
-    },
-    {
-      kehadiran: 'Total Tidak Hadir',
-      'Tidak Hadir': dataTidakHadir.length,
-    },
-  ]);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    setData([
+      {
+        kehadiran: 'Total Hadir',
+        Hadir: dataHadir.length,
+      },
+      {
+        kehadiran: 'Total Tidak Hadir',
+        'Tidak Hadir': dataTidakHadir.length,
+      },
+    ]);
+  }, []);
 
   return (
     <Row>
