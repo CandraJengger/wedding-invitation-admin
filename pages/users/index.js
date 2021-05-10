@@ -46,9 +46,9 @@ const Users = ({ users, cookie, tokenAccess }) => {
         axios
           .delete(`${server}/api/user/${id}`, {
             headers: {
-              cookie: cookie,
               Authorization: tokenAccess,
             },
+            withCredentials: true,
           })
           .then((res) => {
             refreshData();
@@ -70,9 +70,9 @@ const Users = ({ users, cookie, tokenAccess }) => {
     axios
       .post(`${server}/api/user`, user, {
         headers: {
-          cookie: cookie,
           Authorization: tokenAccess,
         },
+        withCredentials: true,
       })
       .then(() => {
         refreshData();
@@ -95,9 +95,9 @@ const Users = ({ users, cookie, tokenAccess }) => {
     axios
       .put(`${server}/api/user/${user.id_user}`, user, {
         headers: {
-          cookie: cookie,
           Authorization: tokenAccess,
         },
+        withCredentials: true,
       })
       .then((res) => {
         refreshData();

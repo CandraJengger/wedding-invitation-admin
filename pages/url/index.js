@@ -8,12 +8,9 @@ import { server } from '../../config/server';
 
 const { confirm } = Modal;
 
-import {
-  EditOutlined,
-  PlusOutlined,
-} from '@ant-design/icons';
+import { EditOutlined, PlusOutlined } from '@ant-design/icons';
 
-const Url = ({url_link, cookie, tokenAccess}) => {
+const Url = ({ url_link, cookie, tokenAccess }) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
@@ -26,13 +23,12 @@ const Url = ({url_link, cookie, tokenAccess}) => {
     Router.push(Router.asPath);
   };
 
-
   function onChange(pagination, filters, sorter, extra) {
     console.log('params', pagination, filters, sorter, extra);
   }
 
   const showAddModal = () => {
-    setIsAddModalVisible(url_link.length == 0? true:false);
+    setIsAddModalVisible(url_link.length == 0 ? true : false);
   };
 
   const handleAddModalOk = () => {
@@ -40,9 +36,9 @@ const Url = ({url_link, cookie, tokenAccess}) => {
     axios
       .post(`${server}/api/url_youtube`, url, {
         headers: {
-          cookie: cookie,
           Authorization: tokenAccess,
         },
+        withCredentials: true,
       })
       .then(() => {
         refreshData();
@@ -65,9 +61,9 @@ const Url = ({url_link, cookie, tokenAccess}) => {
     axios
       .put(`${server}/api/url_youtube/${url.id_link}`, url, {
         headers: {
-          cookie: cookie,
           Authorization: tokenAccess,
         },
+        withCredentials: true,
       })
       .then((res) => {
         refreshData();
@@ -113,19 +109,19 @@ const Url = ({url_link, cookie, tokenAccess}) => {
 
   return (
     <>
-    <Row>
-      <Col xs={24}>
+      <Row>
+        <Col xs={24}>
           <Text level={2} text="Setting Link Youtube" />
         </Col>
         <Col xs={24} style={{ marginBottom: '24px' }}>
-          <Button type="primary" onClick={(showAddModal)}>
+          <Button type="primary" onClick={showAddModal}>
             <PlusOutlined />
             Tambah
           </Button>
         </Col>
-    </Row>
-    <Row>
-    <Col xs={24}>
+      </Row>
+      <Row>
+        <Col xs={24}>
           <Table
             columns={columns}
             dataSource={url_link}
@@ -133,10 +129,10 @@ const Url = ({url_link, cookie, tokenAccess}) => {
             rowKey="id_link"
           />
         </Col>
-    </Row>
+      </Row>
 
-    {/* Modal Add Link */}
-    <Modal
+      {/* Modal Add Link */}
+      <Modal
         title="Add Link Youtube"
         visible={isAddModalVisible}
         onCancel={handleAddModalCancel}
@@ -157,14 +153,14 @@ const Url = ({url_link, cookie, tokenAccess}) => {
         <div style={{ marginBottom: '1rem' }}>
           <label>Url</label>
           <Input
-            onChange={(e) => setUrl({url: e.target.value })}
+            onChange={(e) => setUrl({ url: e.target.value })}
             placeholder="Input URL"
           />
         </div>
       </Modal>
 
-       {/* Modal Edit */}
-       <Modal
+      {/* Modal Edit */}
+      <Modal
         title="Edit Link Youtube"
         visible={isEditModalVisible}
         onCancel={handleEditModalCancel}
@@ -190,7 +186,6 @@ const Url = ({url_link, cookie, tokenAccess}) => {
             value={url.url}
           />
         </div>
-        
       </Modal>
     </>
   );

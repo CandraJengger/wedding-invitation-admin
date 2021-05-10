@@ -1,20 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import Router from 'next/router';
-import { Row, Col, Table, Switch } from 'antd';
+import { Row, Col, Table, Switch, Input } from 'antd';
 import { Text } from '../../components';
 import { myGet } from '../../helper/myGet';
 import axios from 'axios';
 import { server } from '../../config/server';
 
+const { Search } = Input;
+
 const DoaHarapan = ({ response, cookie, tokenAccess }) => {
-  const newData = response.invitations.map((item) => {
-    return {
-      ...item,
-      // show: item.show ? true : false,
-      wish: item.wish ? item.wish : 'Belum mengisi kehadiran',
-    };
-  });
-  const [data, setData] = useState(newData);
+  const [data, setData] = useState(response.invitations);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const refreshData = () => {
@@ -31,14 +26,29 @@ const DoaHarapan = ({ response, cookie, tokenAccess }) => {
         },
         {
           headers: {
-            cookie: cookie,
             Authorization: tokenAccess,
           },
+          withCredentials: true,
         }
       )
       .then(() => {
         refreshData();
         console.log('success');
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const handleSearch = (value) => {
+    axios
+      .get(`http://localhost:3000/api/invitation/?name=${value}`, {
+        headers: {
+          Authorization: tokenAccess,
+        },
+        withCredentials: true,
+      })
+      .then((res) => {
+        refreshData();
+        setData(res.data.data.invitations);
       })
       .catch((err) => console.log(err));
   };
@@ -49,7 +59,7 @@ const DoaHarapan = ({ response, cookie, tokenAccess }) => {
       dataIndex: 'name',
       // specify the condition of filtering result
       // here is that finding the name started with `value`
-      sorter: (a, b) => a.username.length - b.username.length,
+      sorter: (a, b) => a.name.length - b.name.length,
       sortDirections: ['descend'],
     },
     {
@@ -57,6 +67,9 @@ const DoaHarapan = ({ response, cookie, tokenAccess }) => {
       dataIndex: 'wish',
       sorter: (a, b) => a.wish.length - b.wish.length,
       sortDirections: ['descend'],
+      render: (text, record) => {
+        return record.wish ? record.wish : 'Belum mengisi kehadiran';
+      },
     },
     {
       title: 'Action',
@@ -84,9 +97,16 @@ const DoaHarapan = ({ response, cookie, tokenAccess }) => {
 
   return (
     <>
-      <Row>
+      <Row justify="space-between">
         <Col>
           <Text level={2} text="Doa dan Harapan" />
+        </Col>
+        <Col>
+          <Search
+            placeholder="input search text"
+            onSearch={(value) => handleSearch(value)}
+            enterButton
+          />
         </Col>
       </Row>
       <Row>
