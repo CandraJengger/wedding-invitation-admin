@@ -3,6 +3,7 @@ import Router from 'next/router';
 import axios from 'axios';
 import { Layout, Button } from 'antd';
 import { LogoutOutlined } from '@ant-design/icons';
+import { server } from '../../config/server';
 
 const { Header } = Layout;
 
@@ -10,7 +11,7 @@ const HeaderComponent = () => {
   const handleLogout = () => {
     axios
       .post(
-        'http://localhost:3000/api/logout',
+        `${server}/api/logout`,
         {},
         {
           headers: {

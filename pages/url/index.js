@@ -4,6 +4,7 @@ import axios from 'axios';
 import Router from 'next/router';
 import { Row, Col, Table, Space, Button, Modal, Input } from 'antd';
 import { Text } from '../../components';
+import { server } from '../../config/server';
 
 const { confirm } = Modal;
 
@@ -37,7 +38,7 @@ const Url = ({url_link, cookie, tokenAccess}) => {
   const handleAddModalOk = () => {
     setLoading(true);
     axios
-      .post('http://localhost:3000/api/url_youtube', url, {
+      .post(`${server}/api/url_youtube`, url, {
         headers: {
           cookie: cookie,
           Authorization: tokenAccess,
@@ -62,7 +63,7 @@ const Url = ({url_link, cookie, tokenAccess}) => {
   const handleEditModalOk = () => {
     setLoading(true);
     axios
-      .put(`http://localhost:3000/api/url_youtube/${url.id_link}`, url, {
+      .put(`${server}/api/url_youtube/${url.id_link}`, url, {
         headers: {
           cookie: cookie,
           Authorization: tokenAccess,
@@ -196,7 +197,7 @@ const Url = ({url_link, cookie, tokenAccess}) => {
 };
 
 export const getServerSideProps = async (ctx) => {
-  const response = await myGet('http://localhost:3000/api/url_youtube', ctx);
+  const response = await myGet(`${server}/api/url_youtube`, ctx);
   const cookie = ctx.req.headers.cookie;
   const tokenAccess =
     ctx.req.cookies.tokenAccess === undefined

@@ -3,6 +3,7 @@ import { Row, Col, Statistic } from 'antd';
 import { BarChart } from '../components';
 import styles from '../styles/Home.module.css';
 import { useState } from 'react';
+import { server } from '../config/server';
 
 export default function Home({ response }) {
   // console.log(response.invitations)
@@ -34,7 +35,7 @@ export default function Home({ response }) {
 }
 
 export const getServerSideProps = async (ctx) => {
-  const response = await myGet('http://localhost:3000/api/invitation', ctx);
+  const response = await myGet(`${server}/api/invitation`, ctx);
 
   return {
     props: {

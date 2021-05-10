@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Row, Col, Table } from 'antd';
 import { Card, Text, Pagination } from '../../components';
 import { myGet } from '../../helper/myGet';
+import { server } from '../../config/server';
 
 const columns = [
   {
@@ -55,7 +56,7 @@ const Kehadiran = ({ response }) => {
 };
 
 export const getServerSideProps = async (ctx) => {
-  const response = await myGet('http://localhost:3000/api/invitation', ctx);
+  const response = await myGet(`${server}/api/invitation`, ctx);
 
   return {
     props: {

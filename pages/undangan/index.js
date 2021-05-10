@@ -4,6 +4,7 @@ import XLSX from 'xlsx';
 import { Row, Col, Table, Button, Modal, Upload, message } from 'antd';
 import { Text } from '../../components';
 import { myGet } from '../../helper/myGet';
+import { server } from '../../config/server';
 
 import {
   UploadOutlined,
@@ -43,7 +44,7 @@ const Undangan = ({ response, cookie, tokenAccess }) => {
   const handleGenerateNewFile = () => {
     setLoading(true);
     axios
-      .get('http://localhost:3000/api/invitation/generate', {
+      .get(`${server}/api/invitation/generate`, {
         headers: {
           cookie: cookie,
           Authorization: tokenAccess,
@@ -63,7 +64,7 @@ const Undangan = ({ response, cookie, tokenAccess }) => {
   const props = {
     name: 'file',
     multiple: true,
-    action: 'http://localhost:3000/api/invitation',
+    action: `${server}/api/invitation`,
     headers: {
       cookie: cookie,
       authorization: tokenAccess,
@@ -168,7 +169,7 @@ const Undangan = ({ response, cookie, tokenAccess }) => {
 export default Undangan;
 
 export const getServerSideProps = async (ctx) => {
-  const response = await myGet('http://localhost:3000/api/invitation', ctx);
+  const response = await myGet(`${server}/api/invitation`, ctx);
   const cookie = ctx.req.headers.cookie;
   const tokenAccess =
     ctx.req.cookies.tokenAccess === undefined
