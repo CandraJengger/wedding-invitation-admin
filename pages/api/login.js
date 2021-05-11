@@ -28,7 +28,6 @@ export default async function (req, res) {
         res.setHeader(
           'Set-Cookie',
           cookie.serialize('tokenAccess', token, {
-            httpOnly: true,
             secure: process.env.NODE_ENV !== 'development',
             maxAge: 60 * 60,
             sameSite: 'strict',
