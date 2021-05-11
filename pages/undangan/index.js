@@ -40,7 +40,7 @@ const Undangan = ({ response, cookie, tokenAccess }) => {
   const handleGenerateNewFile = () => {
     setLoading(true);
     axios
-      .get(`${server}/api/invitation/generate`, {
+      .get(`${process.env.SERVER_URL}/api/invitation/generate`, {
         headers: {
           Authorization: tokenAccess,
         },
@@ -60,7 +60,7 @@ const Undangan = ({ response, cookie, tokenAccess }) => {
   const props = {
     name: 'file',
     multiple: true,
-    action: `${server}/api/invitation`,
+    action: `${process.env.SERVER_URL}/api/invitation`,
     headers: {
       cookie: cookie,
       authorization: tokenAccess,
@@ -160,7 +160,7 @@ const Undangan = ({ response, cookie, tokenAccess }) => {
 export default Undangan;
 
 export const getServerSideProps = async (ctx) => {
-  const response = await myGet(`${server}/api/invitation`, ctx);
+  const response = await myGet(`${process.env.SERVER_URL}/api/invitation`, ctx);
   const cookie = ctx.req.headers.cookie;
   const tokenAccess =
     ctx.req.cookies.tokenAccess === undefined

@@ -19,7 +19,7 @@ const DoaHarapan = ({ response, cookie, tokenAccess }) => {
   const toggleShow = (user) => {
     axios
       .put(
-        `${server}/api/invitation/${user.id_invitation}`,
+        `${process.env.SERVER_URL}/api/invitation/${user.id_invitation}`,
         {
           name: user.name,
           show: !user.show,
@@ -39,7 +39,7 @@ const DoaHarapan = ({ response, cookie, tokenAccess }) => {
 
   const handleSearch = (value) => {
     axios
-      .get(`${server}/api/invitation/?name=${value}`, {
+      .get(`${process.env.SERVER_URL}/api/invitation/?name=${value}`, {
         headers: {
           Authorization: tokenAccess,
         },
@@ -113,7 +113,7 @@ const DoaHarapan = ({ response, cookie, tokenAccess }) => {
 };
 
 export const getServerSideProps = async (ctx) => {
-  const response = await myGet(`${server}/api/invitation`, ctx);
+  const response = await myGet(`${process.env.SERVER_URL}/api/invitation`, ctx);
   const cookie = ctx.req.headers.cookie;
   const tokenAccess =
     ctx.req.cookies.tokenAccess === undefined

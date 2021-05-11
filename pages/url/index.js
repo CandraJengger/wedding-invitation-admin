@@ -30,7 +30,7 @@ const Url = ({ url_link, cookie, tokenAccess }) => {
   const handleAddModalOk = () => {
     setLoading(true);
     axios
-      .post(`${server}/api/url_youtube`, url, {
+      .post(`${process.env.SERVER_URL}/api/url_youtube`, url, {
         headers: {
           Authorization: tokenAccess,
         },
@@ -55,7 +55,7 @@ const Url = ({ url_link, cookie, tokenAccess }) => {
   const handleEditModalOk = () => {
     setLoading(true);
     axios
-      .put(`${server}/api/url_youtube/${url.id_link}`, url, {
+      .put(`${process.env.SERVER_URL}/api/url_youtube/${url.id_link}`, url, {
         headers: {
           Authorization: tokenAccess,
         },
@@ -183,7 +183,7 @@ const Url = ({ url_link, cookie, tokenAccess }) => {
 };
 
 export const getServerSideProps = async (ctx) => {
-  const response = await myGet(`${server}/api/url_youtube`, ctx);
+  const response = await myGet(`${process.env.SERVER_URL}/api/url_youtube`, ctx);
   const cookie = ctx.req.headers.cookie;
   const tokenAccess =
     ctx.req.cookies.tokenAccess === undefined

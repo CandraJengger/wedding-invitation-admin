@@ -40,7 +40,7 @@ const Users = ({ users, cookie, tokenAccess }) => {
       cancelText: 'No',
       onOk() {
         axios
-          .delete(`${server}/api/user/${id}`, {
+          .delete(`${process.env.SERVER_URL}/api/user/${id}`, {
             headers: {
               Authorization: tokenAccess,
             },
@@ -64,7 +64,7 @@ const Users = ({ users, cookie, tokenAccess }) => {
   const handleAddModalOk = () => {
     setLoading(true);
     axios
-      .post(`${server}/api/user`, user, {
+      .post(`${process.env.SERVER_URL}/api/user`, user, {
         headers: {
           Authorization: tokenAccess,
         },
@@ -89,7 +89,7 @@ const Users = ({ users, cookie, tokenAccess }) => {
   const handleEditModalOk = () => {
     setLoading(true);
     axios
-      .put(`${server}/api/user/${user.id_user}`, user, {
+      .put(`${process.env.SERVER_URL}/api/user/${user.id_user}`, user, {
         headers: {
           Authorization: tokenAccess,
         },
@@ -239,7 +239,7 @@ const Users = ({ users, cookie, tokenAccess }) => {
 };
 
 export const getServerSideProps = async (ctx) => {
-  const response = await myGet(`${server}/api/user`, ctx);
+  const response = await myGet(`${process.env.SERVER_URL}/api/user`, ctx);
   const cookie = ctx.req.headers.cookie;
   const tokenAccess =
     ctx.req.cookies.tokenAccess === undefined

@@ -21,8 +21,7 @@ const authenticate = (handler) => {
             error: {
               message: `Invalid token!`,
             },
-          })
-          .end();
+          });
       }
       req.username = decode;
       return handler(req, res);
