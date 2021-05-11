@@ -21,7 +21,7 @@ export async function myGet(url, ctx) {
     console.log(err);
     if (err.response.status >= 400 && err.response.status < 600) {
       ctx.res.writeHead(302, {
-        Location: `${server}/login`,
+        Location: `${process.env.SERVER_URL}/login`,
       });
       ctx.res.end();
       return {

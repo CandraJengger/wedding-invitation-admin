@@ -18,7 +18,7 @@ const Kehadiran = ({ response, tokenAccess }) => {
 
   const handleSearch = (value) => {
     axios
-      .get(`${server}/api/invitation/?name=${value}`, {
+      .get(`${process.env.SERVER_URL}/api/invitation/?name=${value}`, {
         headers: {
           Authorization: tokenAccess,
         },
@@ -79,7 +79,7 @@ const Kehadiran = ({ response, tokenAccess }) => {
 };
 
 export const getServerSideProps = async (ctx) => {
-  const response = await myGet(`${server}/api/invitation`, ctx);
+  const response = await myGet(`${process.env.SERVER_URL}/api/invitation`, ctx);
   const cookie = ctx.req.headers.cookie;
   const tokenAccess =
     ctx.req.cookies.tokenAccess === undefined

@@ -55,7 +55,7 @@ export default function Home({ response }) {
 }
 
 export const getServerSideProps = async (ctx) => {
-  const response = await myGet(`${server}/api/invitation`, ctx);
+  const response = await myGet(`${process.env.SERVER_URL}/api/invitation`, ctx);
 
   return {
     props: {
