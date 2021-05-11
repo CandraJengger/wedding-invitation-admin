@@ -4,21 +4,20 @@ import { server } from '../config/server';
 
 export async function myGet(url, ctx) {
   let response = '';
-  const cookie = ctx.req.headers.cookie;
-  const tokenAccess =
-    ctx.req.cookies.tokenAccess === undefined
-      ? ''
-      : ctx.req.cookies.tokenAccess;
 
   try {
     response = await axios.get(url, {
-      headers: {
-        cookie: cookie,
-        Authorization: tokenAccess,
-      },
+      headers: ctx.req
+        ? {
+            cookie: ctx.req.headers.cookie,
+            Authorization:
+              ctx.req.cookies.tokenAccess === undefined
+                ? ''
+                : ctx.req.cookies.tokenAccess,
+          }
+        : undefined,
     });
   } catch (err) {
-    console.log(err);
     if (err.response.status >= 400 && err.response.status < 600) {
       ctx.res.writeHead(302, {
         Location: `${server}/login`,
@@ -30,7 +29,7 @@ export async function myGet(url, ctx) {
     }
 
     if (err.response.status >= 400 && err.response.status < 600) {
-      Router.replace('/login');
+      Router.push('/login');
       return {
         data: err.response.data,
       };
