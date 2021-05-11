@@ -4,18 +4,17 @@ import { server } from '../config/server';
 
 export async function myGet(url, ctx) {
   let response = '';
-  const cookie = ctx.req.headers.cookie;
-  const tokenAccess =
-    ctx.req.cookies.tokenAccess === undefined
-      ? ''
-      : ctx.req.cookies.tokenAccess;
+  // const cookie = ctx.req.headers.cookie;
+  // const tokenAccess =
+  //   ctx.req.cookies.tokenAccess === undefined
+  //     ? ''
+  //     : ctx.req.cookies.tokenAccess;
 
   try {
     response = await axios.get(url, {
       headers: {
-        Cookie: cookie,
-        Authorization: tokenAccess,
-        "Content-Type": 'application/json',
+        Authorization: ctx.req.cookies.tokenAccess,
+        'Content-Type': 'application/json',
       },
     });
     console.log(response);
