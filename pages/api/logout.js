@@ -1,5 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import cookie from 'cookie';
+import { server } from '../../config/server';
 
 export default (req, res) => {
     const token = req.headers.cookie;
@@ -18,7 +19,7 @@ export default (req, res) => {
         secure : process.env.NODE_ENV !== "development",
         expires: new Date(0),
         sameSite: "strict",
-        path: "/"
+        path: `${server}`
     }));
   
     res.status(200);
