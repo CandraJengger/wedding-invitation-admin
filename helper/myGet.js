@@ -13,10 +13,12 @@ export async function myGet(url, ctx) {
   try {
     response = await axios.get(url, {
       headers: {
-        cookie: cookie,
+        Cookie: cookie,
         Authorization: tokenAccess,
+        "Content-Type": 'application/json',
       },
     });
+    console.log(response);
   } catch (err) {
     console.log(err);
     if (err.response.status >= 400 && err.response.status < 600) {
@@ -29,12 +31,12 @@ export async function myGet(url, ctx) {
       };
     }
 
-    if (err.response.status >= 400 && err.response.status < 600) {
+    // if (err.response.status >= 400 && err.response.status < 600) {
       Router.replace('/login');
-      return {
-        data: err.response.data,
-      };
-    }
+      // return {
+      //   data: err.response.data,
+      // };
+    // }
   }
 
   return response.data;
