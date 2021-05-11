@@ -30,13 +30,12 @@ export async function myGet(url, ctx) {
         data: err.response.data,
       };
     }
-
-    // if (err.response.status >= 400 && err.response.status < 600) {
+//     if (err.response.status >= 400 && err.response.status < 600) {
       Router.replace('/login');
-      // return {
-      //   data: err.response.data,
-      // };
-    // }
+//       return {
+//         data: err.response.data,
+//       };
+//     }
   }
 
   return response.data;
