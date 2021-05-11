@@ -4,17 +4,17 @@ import { server } from '../config/server';
 
 export async function myGet(url, ctx) {
   let response = '';
-  // const cookie = ctx.req.headers.cookie;
-  // const tokenAccess =
-  //   ctx.req.cookies.tokenAccess === undefined
-  //     ? ''
-  //     : ctx.req.cookies.tokenAccess;
+  const cookie = ctx.req.headers.cookie;
+  const tokenAccess =
+    ctx.req.cookies.tokenAccess === undefined
+      ? ''
+      : ctx.req.cookies.tokenAccess;
 
   try {
     response = await axios.get(url, {
       headers: {
-        Authorization: ctx.req.cookies.tokenAccess,
-        'Content-Type': 'application/json',
+        Cookie: cookie,
+        Authorization: tokenAccess,
       },
     });
     console.log(response);
@@ -29,12 +29,13 @@ export async function myGet(url, ctx) {
         data: err.response.data,
       };
     }
-//     if (err.response.status >= 400 && err.response.status < 600) {
+
+    if (err.response.status >= 400 && err.response.status < 600) {
       Router.replace('/login');
-//       return {
-//         data: err.response.data,
-//       };
-//     }
+      return {
+        data: err.response.data,
+      };
+    }
   }
 
   return response.data;
