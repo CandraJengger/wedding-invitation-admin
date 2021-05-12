@@ -18,7 +18,7 @@ export async function myGet(url, ctx) {
         : undefined,
     });
   } catch (err) {
-    if (err.response.status >= 400 && err.response.status < 600) {
+    if (err.response.status >= 400) {
       ctx.res.writeHead(302, {
         Location: `${process.env.SERVER_URL}/login`,
       });
@@ -28,7 +28,7 @@ export async function myGet(url, ctx) {
       // };
     }
 
-    if (err.response.status >= 400 && err.response.status < 600) {
+    if (err.response.status >= 400) {
       Router.push('/login');
       // return {
       //   data: err.response.data,
