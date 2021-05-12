@@ -23,16 +23,16 @@ export async function myGet(url, ctx) {
         Location: `${process.env.SERVER_URL}/login`,
       });
       ctx.res.end();
-      return {
-        data: err.response.data,
-      };
+      // return {
+      //   data: err.response.data,
+      // };
     }
 
     if (err) {
       Router.push('/login');
-      return {
-        data: err.response.data,
-      };
+      // return {
+      //   data: err.response.data,
+      // };
     }
   }
 
