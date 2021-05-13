@@ -11,7 +11,7 @@ const HeaderComponent = () => {
   const handleLogout = () => {
     axios
       .post(
-        `${server}/api/logout`,
+        `${process.env.SERVER_URL}/api/logout`,
         {},
         {
           headers: {

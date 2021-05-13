@@ -18,21 +18,21 @@ export async function myGet(url, ctx) {
         : undefined,
     });
   } catch (err) {
-    if (err.response.status >= 400 && err.response.status < 600) {
+    if (err) {
       ctx.res.writeHead(302, {
-        Location: `${server}/login`,
+        Location: `${process.env.SERVER_URL}/login`,
       });
       ctx.res.end();
-      return {
-        data: err.response.data,
-      };
+      // return {
+      //   data: err.response.data,
+      // };
     }
 
-    if (err.response.status >= 400 && err.response.status < 600) {
+    if (err) {
       Router.push('/login');
-      return {
-        data: err.response.data,
-      };
+      // return {
+      //   data: err.response.data,
+      // };
     }
   }
 
